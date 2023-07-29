@@ -1,0 +1,76 @@
+"use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+(() => {
+var exports = {};
+exports.id = "pages/index";
+exports.ids = ["pages/index"];
+exports.modules = {
+
+/***/ "./components/TravelForm.tsx":
+/*!***********************************!*\
+  !*** ./components/TravelForm.tsx ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"react/jsx-dev-runtime\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ \"react\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\n\n\nfunction TravelForm() {\n    const { 0: input , 1: setInput  } = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)({\n        startLocation: \"\",\n        endLocation: \"\",\n        duration: \"\",\n        interests: \"\"\n    });\n    const handleChange = (e)=>{\n        setInput({\n            ...input,\n            [e.target.name]: e.target.value\n        });\n    };\n    const handleSubmit = (e)=>{\n        e.preventDefault();\n    // Call ChatGPT API to generate travel plan\n    };\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"form\", {\n        onSubmit: handleSubmit,\n        children: [\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"input\", {\n                type: \"text\",\n                name: \"startLocation\",\n                onChange: handleChange,\n                placeholder: \"Start location\"\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\components\\\\TravelForm.tsx\",\n                lineNumber: 25,\n                columnNumber: 7\n            }, this),\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"input\", {\n                type: \"text\",\n                name: \"endLocation\",\n                onChange: handleChange,\n                placeholder: \"End location\"\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\components\\\\TravelForm.tsx\",\n                lineNumber: 26,\n                columnNumber: 7\n            }, this),\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"input\", {\n                type: \"number\",\n                name: \"duration\",\n                onChange: handleChange,\n                placeholder: \"Duration (days)\"\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\components\\\\TravelForm.tsx\",\n                lineNumber: 27,\n                columnNumber: 7\n            }, this),\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"input\", {\n                type: \"text\",\n                name: \"interests\",\n                onChange: handleChange,\n                placeholder: \"Interests\"\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\components\\\\TravelForm.tsx\",\n                lineNumber: 28,\n                columnNumber: 7\n            }, this),\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"input\", {\n                type: \"submit\",\n                value: \"Generate Plan\"\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\components\\\\TravelForm.tsx\",\n                lineNumber: 29,\n                columnNumber: 7\n            }, this)\n        ]\n    }, void 0, true, {\n        fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\components\\\\TravelForm.tsx\",\n        lineNumber: 24,\n        columnNumber: 5\n    }, this);\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9jb21wb25lbnRzL1RyYXZlbEZvcm0udHN4LmpzIiwibWFwcGluZ3MiOiI7Ozs7O0FBQUE7QUFBaUM7QUFFakMsU0FBU0MsVUFBVSxHQUFHO0lBQ3BCLE1BQU0sS0FBQ0MsS0FBSyxNQUFFQyxRQUFRLE1BQUlILCtDQUFRLENBQUM7UUFDakNJLGFBQWEsRUFBRSxFQUFFO1FBQ2pCQyxXQUFXLEVBQUUsRUFBRTtRQUNmQyxRQUFRLEVBQUUsRUFBRTtRQUNaQyxTQUFTLEVBQUUsRUFBRTtLQUNkLENBQUM7SUFFRixNQUFNQyxZQUFZLEdBQUcsQ0FBQ0MsQ0FBQyxHQUFLO1FBQzFCTixRQUFRLENBQUM7WUFDUCxHQUFHRCxLQUFLO1lBQ1IsQ0FBQ08sQ0FBQyxDQUFDQyxNQUFNLENBQUNDLElBQUksQ0FBQyxFQUFFRixDQUFDLENBQUNDLE1BQU0sQ0FBQ0UsS0FBSztTQUNoQyxDQUFDLENBQUM7SUFDTCxDQUFDO0lBRUQsTUFBTUMsWUFBWSxHQUFHLENBQUNKLENBQUMsR0FBSztRQUMxQkEsQ0FBQyxDQUFDSyxjQUFjLEVBQUUsQ0FBQztJQUNuQiwyQ0FBMkM7SUFDN0MsQ0FBQztJQUVELHFCQUNFLDhEQUFDQyxNQUFJO1FBQUNDLFFBQVEsRUFBRUgsWUFBWTs7MEJBQzFCLDhEQUFDWCxPQUFLO2dCQUFDZSxJQUFJLEVBQUMsTUFBTTtnQkFBQ04sSUFBSSxFQUFDLGVBQWU7Z0JBQUNPLFFBQVEsRUFBRVYsWUFBWTtnQkFBRVcsV0FBVyxFQUFDLGdCQUFnQjs7Ozs7b0JBQUc7MEJBQy9GLDhEQUFDakIsT0FBSztnQkFBQ2UsSUFBSSxFQUFDLE1BQU07Z0JBQUNOLElBQUksRUFBQyxhQUFhO2dCQUFDTyxRQUFRLEVBQUVWLFlBQVk7Z0JBQUVXLFdBQVcsRUFBQyxjQUFjOzs7OztvQkFBRzswQkFDM0YsOERBQUNqQixPQUFLO2dCQUFDZSxJQUFJLEVBQUMsUUFBUTtnQkFBQ04sSUFBSSxFQUFDLFVBQVU7Z0JBQUNPLFFBQVEsRUFBRVYsWUFBWTtnQkFBRVcsV0FBVyxFQUFDLGlCQUFpQjs7Ozs7b0JBQUc7MEJBQzdGLDhEQUFDakIsT0FBSztnQkFBQ2UsSUFBSSxFQUFDLE1BQU07Z0JBQUNOLElBQUksRUFBQyxXQUFXO2dCQUFDTyxRQUFRLEVBQUVWLFlBQVk7Z0JBQUVXLFdBQVcsRUFBQyxXQUFXOzs7OztvQkFBRzswQkFDdEYsOERBQUNqQixPQUFLO2dCQUFDZSxJQUFJLEVBQUMsUUFBUTtnQkFBQ0wsS0FBSyxFQUFDLGVBQWU7Ozs7O29CQUFHOzs7Ozs7WUFDeEMsQ0FDUDtBQUNKLENBQUMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly95b3VyLXByb2plY3QtbmFtZS8uL2NvbXBvbmVudHMvVHJhdmVsRm9ybS50c3g/Y2YyNyJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyB1c2VTdGF0ZSB9IGZyb20gJ3JlYWN0JztcclxuXHJcbmZ1bmN0aW9uIFRyYXZlbEZvcm0oKSB7XHJcbiAgY29uc3QgW2lucHV0LCBzZXRJbnB1dF0gPSB1c2VTdGF0ZSh7XHJcbiAgICBzdGFydExvY2F0aW9uOiAnJyxcclxuICAgIGVuZExvY2F0aW9uOiAnJyxcclxuICAgIGR1cmF0aW9uOiAnJyxcclxuICAgIGludGVyZXN0czogJycsXHJcbiAgfSk7XHJcblxyXG4gIGNvbnN0IGhhbmRsZUNoYW5nZSA9IChlKSA9PiB7XHJcbiAgICBzZXRJbnB1dCh7XHJcbiAgICAgIC4uLmlucHV0LFxyXG4gICAgICBbZS50YXJnZXQubmFtZV06IGUudGFyZ2V0LnZhbHVlXHJcbiAgICB9KTtcclxuICB9O1xyXG5cclxuICBjb25zdCBoYW5kbGVTdWJtaXQgPSAoZSkgPT4ge1xyXG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xyXG4gICAgLy8gQ2FsbCBDaGF0R1BUIEFQSSB0byBnZW5lcmF0ZSB0cmF2ZWwgcGxhblxyXG4gIH07XHJcblxyXG4gIHJldHVybiAoXHJcbiAgICA8Zm9ybSBvblN1Ym1pdD17aGFuZGxlU3VibWl0fT5cclxuICAgICAgPGlucHV0IHR5cGU9XCJ0ZXh0XCIgbmFtZT1cInN0YXJ0TG9jYXRpb25cIiBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfSBwbGFjZWhvbGRlcj1cIlN0YXJ0IGxvY2F0aW9uXCIgLz5cclxuICAgICAgPGlucHV0IHR5cGU9XCJ0ZXh0XCIgbmFtZT1cImVuZExvY2F0aW9uXCIgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX0gcGxhY2Vob2xkZXI9XCJFbmQgbG9jYXRpb25cIiAvPlxyXG4gICAgICA8aW5wdXQgdHlwZT1cIm51bWJlclwiIG5hbWU9XCJkdXJhdGlvblwiIG9uQ2hhbmdlPXtoYW5kbGVDaGFuZ2V9IHBsYWNlaG9sZGVyPVwiRHVyYXRpb24gKGRheXMpXCIgLz5cclxuICAgICAgPGlucHV0IHR5cGU9XCJ0ZXh0XCIgbmFtZT1cImludGVyZXN0c1wiIG9uQ2hhbmdlPXtoYW5kbGVDaGFuZ2V9IHBsYWNlaG9sZGVyPVwiSW50ZXJlc3RzXCIgLz5cclxuICAgICAgPGlucHV0IHR5cGU9XCJzdWJtaXRcIiB2YWx1ZT1cIkdlbmVyYXRlIFBsYW5cIiAvPlxyXG4gICAgPC9mb3JtPlxyXG4gICk7XHJcbn1cclxuIl0sIm5hbWVzIjpbInVzZVN0YXRlIiwiVHJhdmVsRm9ybSIsImlucHV0Iiwic2V0SW5wdXQiLCJzdGFydExvY2F0aW9uIiwiZW5kTG9jYXRpb24iLCJkdXJhdGlvbiIsImludGVyZXN0cyIsImhhbmRsZUNoYW5nZSIsImUiLCJ0YXJnZXQiLCJuYW1lIiwidmFsdWUiLCJoYW5kbGVTdWJtaXQiLCJwcmV2ZW50RGVmYXVsdCIsImZvcm0iLCJvblN1Ym1pdCIsInR5cGUiLCJvbkNoYW5nZSIsInBsYWNlaG9sZGVyIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./components/TravelForm.tsx\n");
+
+/***/ }),
+
+/***/ "./pages/index.jsx":
+/*!*************************!*\
+  !*** ./pages/index.jsx ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"react/jsx-dev-runtime\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ \"react\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var mapbox_gl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! mapbox-gl */ \"mapbox-gl\");\n/* harmony import */ var mapbox_gl__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(mapbox_gl__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _components_TravelForm_tsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/TravelForm.tsx */ \"./components/TravelForm.tsx\");\n\n\n\n\nconst Home = ()=>{\n    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{\n        (mapbox_gl__WEBPACK_IMPORTED_MODULE_2___default().accessToken) = process.env.MAPBOX_ACCESS_TOKEN;\n        new (mapbox_gl__WEBPACK_IMPORTED_MODULE_2___default().Map)({\n            container: \"map\",\n            style: \"mapbox://styles/mapbox/streets-v11\",\n            center: [\n                -74.5,\n                40\n            ],\n            zoom: 9 // starting zoom\n        });\n    }, []);\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n        children: [\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"h1\", {\n                children: \"Travel Planner\"\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\pages\\\\index.jsx\",\n                lineNumber: 18,\n                columnNumber: 7\n            }, undefined),\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(_components_TravelForm_tsx__WEBPACK_IMPORTED_MODULE_3__[\"default\"], {}, void 0, false, {\n                fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\pages\\\\index.jsx\",\n                lineNumber: 19,\n                columnNumber: 7\n            }, undefined),\n            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                id: \"map\",\n                style: {\n                    width: \"100%\",\n                    height: \"400px\"\n                }\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\pages\\\\index.jsx\",\n                lineNumber: 20,\n                columnNumber: 7\n            }, undefined)\n        ]\n    }, void 0, true, {\n        fileName: \"C:\\\\Users\\\\kentaro\\\\travel-gpt\\\\pages\\\\index.jsx\",\n        lineNumber: 17,\n        columnNumber: 5\n    }, undefined);\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Home);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9wYWdlcy9pbmRleC5qc3guanMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7QUFBQTtBQUF5QztBQUNSO0FBQ3FCO0FBRXRELE1BQU1JLElBQUksR0FBRyxJQUFNO0lBQ2pCSCxnREFBUyxDQUFDLElBQU07UUFDZEMsOERBQW9CLEdBQUdJLE9BQU8sQ0FBQ0MsR0FBRyxDQUFDQyxtQkFBbUIsQ0FBQztRQUN2RCxJQUFJTixzREFBWSxDQUFDO1lBQ2ZRLFNBQVMsRUFBRSxLQUFLO1lBQ2hCQyxLQUFLLEVBQUUsb0NBQW9DO1lBQzNDQyxNQUFNLEVBQUU7Z0JBQUMsQ0FBQyxJQUFJO0FBQUUsa0JBQUU7YUFBQztZQUNuQkMsSUFBSSxFQUFFLENBQUMsQ0FBQyxnQkFBZ0I7U0FDekIsQ0FBQyxDQUFDO0lBQ0wsQ0FBQyxFQUFFLEVBQUUsQ0FBQyxDQUFDO0lBRVAscUJBQ0UsOERBQUNDLEtBQUc7OzBCQUNGLDhEQUFDQyxJQUFFOzBCQUFDLGdCQUFjOzs7Ozt5QkFBSzswQkFDdkIsOERBQUNaLGtFQUFVOzs7O3lCQUFHOzBCQUNkLDhEQUFDVyxLQUFHO2dCQUFDRSxFQUFFLEVBQUMsS0FBSztnQkFBQ0wsS0FBSyxFQUFFO29CQUFDTSxLQUFLLEVBQUUsTUFBTTtvQkFBRUMsTUFBTSxFQUFFLE9BQU87aUJBQUM7Ozs7O3lCQUFROzs7Ozs7aUJBQ3pELENBQ047QUFDSixDQUFDO0FBRUQsaUVBQWVkLElBQUksRUFBQyIsInNvdXJjZXMiOlsid2VicGFjazovL3lvdXItcHJvamVjdC1uYW1lLy4vcGFnZXMvaW5kZXguanN4PzdmZmQiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZUVmZmVjdCB9IGZyb20gJ3JlYWN0JztcclxuaW1wb3J0IG1hcGJveGdsIGZyb20gJ21hcGJveC1nbCc7XHJcbmltcG9ydCBUcmF2ZWxGb3JtIGZyb20gJy4uL2NvbXBvbmVudHMvVHJhdmVsRm9ybS50c3gnO1xyXG5cclxuY29uc3QgSG9tZSA9ICgpID0+IHtcclxuICB1c2VFZmZlY3QoKCkgPT4ge1xyXG4gICAgbWFwYm94Z2wuYWNjZXNzVG9rZW4gPSBwcm9jZXNzLmVudi5NQVBCT1hfQUNDRVNTX1RPS0VOO1xyXG4gICAgbmV3IG1hcGJveGdsLk1hcCh7XHJcbiAgICAgIGNvbnRhaW5lcjogJ21hcCcsIC8vIGNvbnRhaW5lciBpZFxyXG4gICAgICBzdHlsZTogJ21hcGJveDovL3N0eWxlcy9tYXBib3gvc3RyZWV0cy12MTEnLFxyXG4gICAgICBjZW50ZXI6IFstNzQuNSwgNDBdLCAvLyBzdGFydGluZyBwb3NpdGlvbiBbbG5nLCBsYXRdXHJcbiAgICAgIHpvb206IDkgLy8gc3RhcnRpbmcgem9vbVxyXG4gICAgfSk7XHJcbiAgfSwgW10pO1xyXG5cclxuICByZXR1cm4gKFxyXG4gICAgPGRpdj5cclxuICAgICAgPGgxPlRyYXZlbCBQbGFubmVyPC9oMT5cclxuICAgICAgPFRyYXZlbEZvcm0gLz5cclxuICAgICAgPGRpdiBpZD1cIm1hcFwiIHN0eWxlPXt7d2lkdGg6ICcxMDAlJywgaGVpZ2h0OiAnNDAwcHgnfX0+PC9kaXY+XHJcbiAgICA8L2Rpdj5cclxuICApO1xyXG59O1xyXG5cclxuZXhwb3J0IGRlZmF1bHQgSG9tZTtcclxuIl0sIm5hbWVzIjpbIlJlYWN0IiwidXNlRWZmZWN0IiwibWFwYm94Z2wiLCJUcmF2ZWxGb3JtIiwiSG9tZSIsImFjY2Vzc1Rva2VuIiwicHJvY2VzcyIsImVudiIsIk1BUEJPWF9BQ0NFU1NfVE9LRU4iLCJNYXAiLCJjb250YWluZXIiLCJzdHlsZSIsImNlbnRlciIsInpvb20iLCJkaXYiLCJoMSIsImlkIiwid2lkdGgiLCJoZWlnaHQiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./pages/index.jsx\n");
+
+/***/ }),
+
+/***/ "mapbox-gl":
+/*!****************************!*\
+  !*** external "mapbox-gl" ***!
+  \****************************/
+/***/ ((module) => {
+
+module.exports = require("mapbox-gl");
+
+/***/ }),
+
+/***/ "react":
+/*!************************!*\
+  !*** external "react" ***!
+  \************************/
+/***/ ((module) => {
+
+module.exports = require("react");
+
+/***/ }),
+
+/***/ "react/jsx-dev-runtime":
+/*!****************************************!*\
+  !*** external "react/jsx-dev-runtime" ***!
+  \****************************************/
+/***/ ((module) => {
+
+module.exports = require("react/jsx-dev-runtime");
+
+/***/ })
+
+};
+;
+
+// load runtime
+var __webpack_require__ = require("../webpack-runtime.js");
+__webpack_require__.C(exports);
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exports__ = (__webpack_exec__("./pages/index.jsx"));
+module.exports = __webpack_exports__;
+
+})();
