@@ -5,7 +5,7 @@ import TravelForm from '../components/TravelForm';
 const Home = () => {
   useEffect(() => {
     //mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-    mapboxgl.accessToken = '<sk.eyJ1Ijoia2VudGFyb21vcmkiLCJhIjoiY2xrbnE0ejI2MXk1YjNvcnp6Y3ZrMm9laiJ9.T744HGsNP8nByV7xFkmjzA>';
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia2VudGFyb21vcmkiLCJhIjoiY2xrbnExMHloMHcwcDNvbnl1NWw5NTgzayJ9.MSZIac5Dxul-fkh5BdYL4A';
     new mapboxgl.Map({
       container: 'map', // container id
       style: 'mapbox://styles/mapbox/streets-v11',
