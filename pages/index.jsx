@@ -1,4 +1,6 @@
 import mapboxgl from 'mapbox-gl';
+import '../public/styles.css';
+import TravelForm from '../components/TravelForm.tsx';
 
 mapboxgl.accessToken = process.env.sk.eyJ1Ijoia2VudGFyb21vcmkiLCJhIjoiY2xrbnE0ejI2MXk1YjNvcnp6Y3ZrMm9laiJ9.T744HGsNP8nByV7xFkmjzA;
 const map = new mapboxgl.Map({
