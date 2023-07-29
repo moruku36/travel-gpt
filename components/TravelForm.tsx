@@ -30,3 +30,5 @@ function TravelForm() {
     </form>
   );
 }
+
+export default TravelForm;
