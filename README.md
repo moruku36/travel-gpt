@@ -1,4 +1,4 @@
-# What is Travel-GPT
+# What is Co-Voyageur
 Travel-gpt is an intelligent chatbot service for travel enthusiasts and users planning trips. This service is provided by combining the powerful cloud technology of Microsoft Azure, the natural language processing capabilities of ChatGPT, and the detailed map information of Mapbox.
 
 Main features:
