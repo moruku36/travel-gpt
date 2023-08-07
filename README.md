@@ -1,5 +1,5 @@
 # What is Co-Voyageur
-Travel-gpt is an intelligent chatbot service for travel enthusiasts and users planning trips. This service is provided by combining the powerful cloud technology of Microsoft Azure, the natural language processing capabilities of ChatGPT, and the detailed map information of Mapbox.
+Co-Voyageur is an intelligent chatbot service for travel enthusiasts and users planning trips. This service is provided by combining the powerful cloud technology of Microsoft Azure, the natural language processing capabilities of ChatGPT, and the detailed map information of Mapbox.
 
 Main features:
 
@@ -9,7 +9,7 @@ Main features:
 - Real-time information: Provides real-time information on local weather, traffic information, events, etc.
 - Multilingual support: Supports multiple languages ​​and enables communication in the user's native language.
 
-Travel planner: An application that creates travel plans tailored to the user's preferences and budget using ChatGPT's language model and code generation model. Use the Mapbox GL js library to display maps, routes, tourist spots, etc. at the destination and provide a realistic experience with 3D or globe views. For example, if a user enters "Tell me recommended tourist spots in Thailand," you can get the following answer from ChatGPT and their respective location information:
+Co-Voyageur: An application that creates travel plans tailored to the user's preferences and budget using ChatGPT's language model and code generation model. Use the Mapbox GL js library to display maps, routes, tourist spots, etc. at the destination and provide a realistic experience with 3D or globe views. For example, if a user enters "Tell me recommended tourist spots in Thailand," you can get the following answer from ChatGPT and their respective location information:
 
 1. Grand Palace and Emerald Temple in Bangkok: Beautiful buildings where you can feel the history and culture of Thailand.
 2. Ayutthaya Historical Park: The ancient capital of Thailand with historical ruins scattered throughout.
