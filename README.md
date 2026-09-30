@@ -1,3 +1,11 @@
+# Co-Voyageur Travel Chat
+
+[English](README.md) | [日本語](README.ja.md)
+
+Travel-planning chatbot combining Microsoft Azure, ChatGPT, and Mapbox for travel consultation and map-based suggestions.
+
+---
+
 # What is Co-Voyageur
 Co-Voyageur is an intelligent chatbot service for travel enthusiasts and users planning trips. This service is provided by combining the powerful cloud technology of Microsoft Azure, the natural language processing capabilities of ChatGPT, and the detailed map information of Mapbox.
 
