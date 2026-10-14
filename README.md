@@ -1,32 +1,33 @@
-# Co-Voyageur Travel Chat
+# CoVoyager Travel Chat
 
 [English](README.md) | [日本語](README.ja.md)
 
-Travel-planning chatbot combining Microsoft Azure, ChatGPT, and Mapbox for travel consultation and map-based suggestions.
+Map-linked conversational planning for editable domestic and international trips.
+Repository: [moruku36/covoyager-travel-chat](https://github.com/moruku36/covoyager-travel-chat).
 
----
+## Current status
 
-# What is Co-Voyageur
-Co-Voyageur is an intelligent chatbot service for travel enthusiasts and users planning trips. This service is provided by combining the powerful cloud technology of Microsoft Azure, the natural language processing capabilities of ChatGPT, and the detailed map information of Mapbox.
+This is an early Next.js Pages Router / React prototype with a Mapbox map and a chat panel. Map and chat state are not connected. Structured itinerary editing, persistence, collaboration, live travel data, and Azure integration are not implemented. The chat uses legacy OpenAI completion endpoints. This is not a completed Phase 1 MVP or a production-ready service.
 
-Main features:
+The 2026-10-14 change preserves code and Git history, changes the product/repository name, and adds design documents. It does not implement the roadmap, deploy a service, enable billing, or change authentication.
 
-- Travel consultation: Answer questions about places users want to go and activities they are interested in, and propose optimal travel plans and spots.
-- Mapbox map integration: Obtain detailed map information from Mapbox on regions and spots that users are interested in and provide visual information. This allows you to check real-time route proposals, local terrain, traffic information, etc.
-- Azure integration: Analyze user questions and requests using Azure's AI and data analysis tools to provide more personalized travel proposals.
-- Real-time information: Provides real-time information on local weather, traffic information, events, etc.
-- Multilingual support: Supports multiple languages ​​and enables communication in the user's native language.
+## Design and roadmap
 
-Co-Voyageur: An application that creates travel plans tailored to the user's preferences and budget using ChatGPT's language model and code generation model. Use the Mapbox GL js library to display maps, routes, tourist spots, etc. at the destination and provide a realistic experience with 3D or globe views. For example, if a user enters "Tell me recommended tourist spots in Thailand," you can get the following answer from ChatGPT and their respective location information:
+- [Overall design (Japanese)](docs/DESIGN.md): architecture, data model, API, freshness, costs, privacy, tests, migration, and open decisions.
+- [Phase 1–3 roadmap (Japanese)](docs/ROADMAP.md): scope, exclusions, acceptance criteria, and release gates.
+- [Rename and verification record (Japanese)](docs/CHANGE_RECORD.md): baseline, affected references, and remaining work.
 
-1. Grand Palace and Emerald Temple in Bangkok: Beautiful buildings where you can feel the history and culture of Thailand.
-2. Ayutthaya Historical Park: The ancient capital of Thailand with historical ruins scattered throughout.
-3. Doi Suthep in Chiang Mai: A resort surrounded by beautiful natural environment where you can enjoy activities such as trekking and elephant camps.
-4. Patong Beach in Phuket: A resort with beautiful beaches and lively nightlife.
-5. Phi Phi Island in Krabi: Characterized by beautiful sea and rocky terrain where you can enjoy snorkeling and diving.
+Phase 1 connects map, chat, and an editable itinerary. Phase 2 supports each companion's required/preferred conditions, rest, separate activities/rooms, budgets, and explicit agreement on conflicts. Phase 3 adds consent-based optional personal accommodations and replanning during travel. Optional health-related information is minimized, private by default, and never automatically shared with companions. The service does not diagnose or guarantee safety. Public examples are fictional.
 
+## Local development
 
-# How to use
-1. Downlodad this repository `git clone <github-repository-name>`
-2. Install npm packages by running `npm install`
-3. Start the project by running `npm run dev`
+```sh
+git clone https://github.com/moruku36/covoyager-travel-chat.git
+cd covoyager-travel-chat
+npm ci
+npm run dev
+```
+
+These are existing development commands, not proof that the legacy chat works. Review [security migration](docs/DESIGN.md#8-セキュリティとプライバシー) before using credentials or personal data: the browser code references `NEXT_PUBLIC_OPENAI_API_KEY`, and environment/build artifacts are already tracked. Do not set a new LLM secret in a public environment variable. Only a scoped, URL-restricted public Mapbox token belongs in the browser. No external API call is needed to review the design.
+
+`npm run build` is the existing build command. `npm test` currently exits with “no test specified”; a test suite is planned. Dependency updates, artifact cleanup, credential remediation, and provider selection require separate implementation work.

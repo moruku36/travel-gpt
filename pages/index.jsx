@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Head from 'next/head';
 import mapboxgl from 'mapbox-gl';
 import Chat from '../components/Chat';
 import TravelForm from '../components/TravelForm';
@@ -20,8 +21,11 @@ const Home = () => {
 
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh' }}>
+      <Head>
+        <title>CoVoyager Travel Chat</title>
+      </Head>
       <div style={{ width: '25%', height: '100%', overflowY: 'auto' }}>
-        <h1>Travel Planner</h1>
+        <h1>CoVoyager Travel Chat</h1>
         <TravelForm onFormSubmit={handleFormSubmit} />
         <Chat />
       </div>

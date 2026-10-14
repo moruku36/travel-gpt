@@ -1,7 +1,12 @@
 {
-    "name": "your-project-name",
+    "name": "covoyager-travel-chat",
     "version": "1.0.0",
-    "description": "Your project description",
+    "description": "CoVoyager Travel Chat: map-linked conversational travel planning prototype",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/moruku36/covoyager-travel-chat.git"
+    },
+    "homepage": "https://github.com/moruku36/covoyager-travel-chat#readme",
     "main": "index.js",
     "dependencies": {
         "axios": "^0.21.4",
