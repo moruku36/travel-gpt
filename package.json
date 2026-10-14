@@ -21,7 +21,8 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "test:mock": "node --require ./scripts/register-mock-ts.cjs --test test/itineraryOps.test.js"
     },
     "author": "Your Name",
     "license": "ISC",

@@ -26,6 +26,12 @@ const Home = () => {
       </Head>
       <div style={{ width: '25%', height: '100%', overflowY: 'auto' }}>
         <h1>CoVoyager Travel Chat</h1>
+        <div style={{ margin: '8px 12px', padding: '8px 10px', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '6px', fontSize: '12px' }}>
+          <span style={{ fontWeight: 'bold', color: '#1d4ed8' }}>固定データプレビュー:</span>{' '}
+          <a href="/mock" style={{ color: '#2563eb', textDecoration: 'underline', fontWeight: 600 }}>
+            Phase 1 画面モック (/mock) を開く &rarr;
+          </a>
+        </div>
         <TravelForm onFormSubmit={handleFormSubmit} />
         <Chat />
       </div>

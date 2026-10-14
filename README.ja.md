@@ -13,6 +13,8 @@ Next.js Pages Router / React の初期試作です。Mapbox 地図とチャッ�
 
 ## 設計
 
+固定データ画面モックは `npm run dev` 後の `/mock` で開けます。架空データと地図プレースホルダーを使い、Mapbox/LLM には接続しません。`npm run test:mock` はページと同じ TypeScript を検証します。[実装報告](docs/MOCK_IMPLEMENTATION_REPORT.md)と[レビュー・検証記録](docs/MOCK_REVIEW_RESOLUTION.md)で画面モックと全体 MVP を区別しています。実ブラウザの操作確認は残件です。
+
 - [全体設計](docs/DESIGN.md): 構成図、データモデル、API、鮮度・根拠・不確実性、費用上限、セキュリティ、テスト、移行、未決事項。
 - [Phase 1〜3 ロードマップ](docs/ROADMAP.md): 各 Phase の対象・非対象・受入基準。
 - [名称変更と検証記録](docs/CHANGE_RECORD.md): 現状調査、影響範囲、残件。
