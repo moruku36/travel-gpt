@@ -10,6 +10,10 @@
 
 # testing
 /coverage
+# Local review transcripts; publish only the summarized mock verification record.
+/docs/CLAUDE_REVIEW_INITIAL.md
+/docs/CLAUDE_REVIEW_FINAL.md
+/docs/CLAUDE_REVIEW_ADDENDUM.md
 
 # next.js
 /.next/

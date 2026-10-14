@@ -13,6 +13,8 @@ The 2026-10-14 change preserves code and Git history, changes the product/reposi
 
 ## Design and roadmap
 
+Local fixed-data screen mock: run `npm run dev` and open `/mock`. It uses fictional fixtures and a local map placeholder, with no Mapbox/LLM connection. `npm run test:mock` checks the canonical TypeScript operations. [Implementation](docs/MOCK_IMPLEMENTATION_REPORT.md) and [review/validation](docs/MOCK_REVIEW_RESOLUTION.md) distinguish this preview from the full MVP. Browser interaction verification remains pending.
+
 - [Overall design (Japanese)](docs/DESIGN.md): architecture, data model, API, freshness, costs, privacy, tests, migration, and open decisions.
 - [Phase 1–3 roadmap (Japanese)](docs/ROADMAP.md): scope, exclusions, acceptance criteria, and release gates.
 - [Rename and verification record (Japanese)](docs/CHANGE_RECORD.md): baseline, affected references, and remaining work.
