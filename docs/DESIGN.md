@@ -152,7 +152,7 @@ P1 は匿名でも server 回数制限を必須とし、公開前に abuse 対�
 
 ## 8. セキュリティとプライバシー
 
-現状の `NEXT_PUBLIC_OPENAI_API_KEY` は browser 露出可能性がある。[Next.js 公開変数](https://nextjs.org/docs/pages/guides/environment-variables)仕様に従い P1 で server secret に置換。追跡済み環境・生成物は新しい差分へ転載しない。既存漏えいの可能性は所有者がキー失効/再発行、履歴影響を別作業で判断。今回はキー・認証・履歴を変更しない。
+現状の `NEXT_PUBLIC_OPENAI_API_KEY` 参照は browser 露出可能性がある。[Next.js 公開変数](https://nextjs.org/docs/pages/guides/environment-variables)仕様に従い P1 で server secret に置換。2026-10-14 の追加対処で、旧 OpenAI キーは本人申告で失効済みとして扱い、`.env.local` と `.next` を現行 Git ツリーから除去した。失効を API で検証したわけではない。過去履歴とローカルの非公開復元用コピーは保持し、履歴書換え・キー発行/失効・認証変更は行っていない。空の `.env.example` と `.gitignore` で再混入を防ぐが、明示的な force add を防ぐ保証ではない。legacy browser 変数へ新しい秘密を入れず、server 移行を別実装とする。上の現状表は変更前基準 commit の調査結果で、`node_modules` の既存追跡は今回の除去対象外。
 
 - 秘密・実チャット・個人の健康/交際情報を Git、公開 issue、fixture、画像、解析 log に入れない。公開例は架空。公開文書に利用者/同行者の事情を含めない。
 - 健康関連配慮は P3 まで収集しない。P2 は旅行上の徒歩上限/休息頻度などを任意入力、診断や理由を求めず推測しない。

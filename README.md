@@ -28,6 +28,6 @@ npm ci
 npm run dev
 ```
 
-These are existing development commands, not proof that the legacy chat works. Review [security migration](docs/DESIGN.md#8-セキュリティとプライバシー) before using credentials or personal data: the browser code references `NEXT_PUBLIC_OPENAI_API_KEY`, and environment/build artifacts are already tracked. Do not set a new LLM secret in a public environment variable. Only a scoped, URL-restricted public Mapbox token belongs in the browser. No external API call is needed to review the design.
+These are existing development commands, not proof that the legacy chat works. Review [security migration](docs/DESIGN.md#8-セキュリティとプライバシー) before using credentials or personal data: the browser code still references `NEXT_PUBLIC_OPENAI_API_KEY`. The owner reported the old OpenAI key revoked; `.env.local` and `.next` artifacts have been removed from the current Git tree, while prior Git history remains. Copy the empty [.env.example](.env.example) locally and keep the legacy public LLM variable empty until server-side migration. Do not set a new LLM secret in a public environment variable. Only a scoped, URL-restricted public Mapbox token belongs in the browser. No external API call is needed to review the design.
 
 `npm run build` is the existing build command. `npm test` currently exits with “no test specified”; a test suite is planned. Dependency updates, artifact cleanup, credential remediation, and provider selection require separate implementation work.

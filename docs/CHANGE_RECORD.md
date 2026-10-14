@@ -14,7 +14,7 @@
 ## 調査・影響
 
 - 地図と chat は未連動、旅程モデル・編集・永続化なし。API ファイルは正規 handler ではない。README の Azure/ライブ情報は実装根拠なし。
-- `.env.local`、`.next`、`node_modules` が既に追跡されている。値や生成物を新しい差分へ転載せず、キー対処/追跡解除は別変更へ。公開 LLM キー参照は P1 準備で server に移す。
+- 基準 commit では `.env.local`、`.next`、`node_modules` が追跡されていた。下記の追加対処で `.env.local`/`.next` を現行ツリーから除去した。`node_modules` は今回の対象外。公開 LLM キー参照は P1 準備で server に移す。
 - ソース・metadata の名称参照を調査。生成物と依存の内部 name は改名対象外。リポジトリ内の Actions workflow/旧 repo を使う action 参照は検出されず、dependabot 設定のみ。Pages API は 404 を返し、有効な Pages サイトを確認できなかった。
 - GitHub main は調査時点で protected=false。rename API は repository ID `672184279`、新 name/URL、default branch `main` を返し成功。履歴を別リポジトリにコピーしていない。
 - GitHub の通常 URL/Git redirect は旧名を再利用すると失われる。各利用者は `git remote set-url origin https://github.com/moruku36/covoyager-travel-chat.git` を実行。外部 webhook/hosting/CI/ダッシュボードのリンクは担当者確認が必要で、この変更で操作しない。
@@ -40,9 +40,20 @@
 
 ## 残件
 
-1. P1 準備: 既存キーの影響判断、生成物追跡整理、依存/API 更新、保存許諾付き provider、mock test/費用 guard。
+1. P1 準備: 履歴残存と再混入防止の維持、server 専用キーへの移行、依存/API 更新、保存許諾付き provider、mock test/費用 guard。旧キーは本人申告で失効済み、現行ツリー除去済みとして区別する。
 2. P1〜P3 のすべての機能実装と受入検証。
 3. 具体予算、運用担当、対応都市/交通、LLM/DB/認証、P3 同意/保持条件。
 4. 外部連携の URL 更新は担当者へ引継ぎ。ダッシュボードは別担当が管理。
 
 main への反映は履歴を保持した追加 commit で行い、force push・history rewrite をしない。コード rollback は revert、改名 rollback は外部リンク影響を見て管理者判断とする。
+
+## 追加対処: 失効済みキーの現行ツリー除去
+
+2026-10-14、本人が旧 OpenAI キーは失効済みと申告し、削除を依頼した。失効状態を実 API に送って試してはいない。
+
+- `.env.local` 1 ファイルと `.next` の生成物/cache 60 ファイル、計61ファイルを Git 追跡解除。秘密を含む削除差分はログやチャットへ表示しない。
+- ローカル環境の OpenAI 値を空にし、Mapbox 公開トークンの設定は維持。元の環境ファイルと生成物は repository の外に復元用として保持し、不可逆消去をしない。バックアップを Git へ追加しない。
+- `.env.*` を ignore し、値のない `.env.example` だけ例外。既存の `.next` ignore と合わせて再混入を防ぐ。サンプルは server 移行が未実装であることを明記。
+- 今回、Mapbox トークンの失効/変更、依存更新、API 実装、課金、認証変更、履歴書換えはしない。
+- 値を表示しない照合で、ステージ済みツリー全体に旧 OpenAI 値がないこと、61対象ファイルの追跡解除、現行 `.next` の不在、ローカル旧 LLM 値が空、Mapbox 設定の不変を確認した。空サンプル、ignore、秘密を含まない追加内容、空白検査も PASS。公開 main の tree/blob 読戻しと commit は完了報告で示す。
+- 過去履歴と非公開の復元用コピーには値が残る。除去前 commit を単純 revert すると再露出するため、環境/生成物を復活させずに必要な変更だけ戻す。失効済みという本人申告と、今回の現行ツリー除去という検証結果は別の事実として記録する。
