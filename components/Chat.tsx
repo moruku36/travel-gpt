@@ -5,7 +5,7 @@ import styles from './Chat.module.css';
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const textareaRef = useRef();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const sendMessage = async () => {
     const response = await axios.post(
