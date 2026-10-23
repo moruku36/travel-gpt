@@ -501,9 +501,8 @@ textarea.input {
   .map-toggle {
     display: block;
     position: absolute;
-    left: 50%;
-    bottom: 8px;
-    transform: translateX(-50%);
+    left: 10px;
+    top: 10px;
     z-index: 3;
     border: 1px solid var(--border);
     background: var(--surface);
@@ -1101,6 +1100,9 @@ form.chat-input {
 }
 .day-actions {
   margin: 8px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 .search {
   position: relative;

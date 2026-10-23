@@ -176,6 +176,7 @@ export type TripAction =
   | { type: 'moveStop'; stopId: ID; dayId: ID; index: number }
   | { type: 'updateStop'; stopId: ID; patch: Partial<Omit<Stop, 'id'>> }
   | { type: 'updateDay'; dayId: ID; patch: Partial<Pick<Day, 'mode' | 'startTime' | 'title'>> }
+  | { type: 'setDayOrder'; dayId: ID; stopIds: ID[] }
   | { type: 'applyProposal'; proposal: Proposal; places: SuggestedPlace[] }
   | { type: 'react'; placeId: ID; participantId: ID; value: ReactionValue | null }
   | { type: 'addNote'; placeId: ID; authorId: ID; tag: NoteTag; text: string }
@@ -261,6 +262,12 @@ function apply(trip: Trip, a: TripAction): Trip {
     }
     case 'updateDay':
       return { ...trip, days: trip.days.map((d) => (d.id === a.dayId ? { ...d, ...a.patch } : d)) };
+    case 'setDayOrder': {
+      const day = trip.days.find((d) => d.id === a.dayId);
+      // must be a permutation of the current stops
+      if (!day || a.stopIds.length !== day.stopIds.length || !day.stopIds.every((id) => a.stopIds.includes(id))) return trip;
+      return { ...trip, days: trip.days.map((d) => (d.id === a.dayId ? { ...d, stopIds: [...a.stopIds] } : d)) };
+    }
     case 'applyProposal':
       return applyProposal(trip, a.proposal, a.places).trip;
     case 'react': {
@@ -405,6 +412,49 @@ export function applyProposal(trip: Trip, proposal: Proposal, suggested: Suggest
     }
   }
   return { trip: t, skipped };
+}
+
+/**
+ * Shorter visiting order: greedy nearest neighbour from the first stop, then 2-opt.
+ * Locked stops, stops with a fixed start time and rest blocks keep their positions.
+ */
+export function optimizeOrder(trip: Trip, day: Day): ID[] {
+  const ids = day.stopIds;
+  const movable = (id: ID) => {
+    const s = trip.stops[id];
+    return !!s && !s.locked && !s.startTime && !!s.placeId && s.kind !== 'rest';
+  };
+  const slots = ids.map((id, i) => (i > 0 && movable(id) ? i : -1)).filter((i) => i >= 0);
+  if (slots.length < 2) return ids;
+  const pool = slots.map((i) => ids[i]);
+  const pos = (id: ID) => placeOf(trip, id)!;
+  const start = placeOf(trip, ids[0]);
+  const order: ID[] = [];
+  let cur = start ?? pos(pool[0]);
+  const left = [...pool];
+  while (left.length) {
+    left.sort((a, b) => haversineKm(cur, pos(a)) - haversineKm(cur, pos(b)));
+    const next = left.shift()!;
+    order.push(next);
+    cur = pos(next);
+  }
+  const length = (o: ID[]) => o.reduce((s, id, i) => s + haversineKm(i === 0 ? start ?? pos(id) : pos(o[i - 1]), pos(id)), 0);
+  let improved = true;
+  while (improved) {
+    improved = false;
+    for (let i = 0; i < order.length - 1; i++) {
+      for (let j = i + 1; j < order.length; j++) {
+        const cand = [...order.slice(0, i), ...order.slice(i, j + 1).reverse(), ...order.slice(j + 1)];
+        if (length(cand) + 1e-9 < length(order)) {
+          order.splice(0, order.length, ...cand);
+          improved = true;
+        }
+      }
+    }
+  }
+  const out = [...ids];
+  slots.forEach((slot, k) => (out[slot] = order[k]));
+  return out;
 }
 
 // ---- history (undo / redo) -------------------------------------------------

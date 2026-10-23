@@ -13,7 +13,7 @@ import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalList
 import { CSS } from '@dnd-kit/utilities';
 import type { Day, ID, StopKind, TransportMode, Trip } from '@/lib/types';
 import type { TripAction } from '@/lib/trip';
-import { candidates, fromMinutes, schedule } from '@/lib/trip';
+import { candidates, fromMinutes, optimizeOrder, schedule } from '@/lib/trip';
 import type { DayRoute } from '@/lib/client/useRoutes';
 import { DAY_COLORS } from '@/lib/geo';
 import { dayLabel, distanceLabel, durationLabel, KIND_LABEL, MODE_LABEL, money, STATUS_LABEL } from '@/lib/format';
@@ -117,8 +117,12 @@ function DayEditor(props: Props & { day: Day }) {
   };
 
   const end = sched.length ? sched[sched.length - 1].end : null;
+  const first = sched.length ? fromMinutes(sched[0].start) : day.startTime;
   const travelTotal = sched.reduce((s, x) => s + x.travelToNext, 0);
   const lateCount = sched.filter((s) => s.late).length;
+  const longWalk = day.mode === 'walking' && (route?.distances ?? []).some((m) => (m ?? 0) > 3000);
+  const optimized = optimizeOrder(trip, day);
+  const canOptimize = optimized.some((id, i) => id !== day.stopIds[i]);
 
   return (
     <div className="day-editor">
@@ -140,11 +144,19 @@ function DayEditor(props: Props & { day: Day }) {
         </label>
       </div>
       <p className="muted small">
-        {day.stopIds.length ? `${day.startTime}〜${end !== null ? fromMinutes(end) : ''} ・ 移動 ${durationLabel(travelTotal)}` : 'まだ予定がありません。チャットで相談するか、下で検索して追加してください。'}
+        {day.stopIds.length ? `${first}〜${end !== null ? fromMinutes(end) : ''} ・ 移動 ${durationLabel(travelTotal)}` : 'まだ予定がありません。チャットで相談するか、下で検索して追加してください。'}
         {route?.warning ? ` ・ ${route.warning}` : ''}
       </p>
       {lateCount > 0 && <p className="warn small">⚠ 開始時刻を指定した予定に間に合わない箇所が {lateCount} 件あります</p>}
       {end !== null && end > 22 * 60 && <p className="warn small">⚠ 22時を過ぎます。予定を減らすか別の日へ移しましょう</p>}
+      {longWalk && (
+        <p className="warn small">
+          ⚠ 3km を超える徒歩移動があります。{' '}
+          <button className="link" onClick={() => dispatch({ type: 'updateDay', dayId: day.id, patch: { mode: 'transit' } })}>
+            電車・バスに切り替える
+          </button>
+        </p>
+      )}
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
         <SortableContext items={day.stopIds} strategy={verticalListSortingStrategy}>
@@ -176,6 +188,11 @@ function DayEditor(props: Props & { day: Day }) {
         <button className="btn" onClick={() => dispatch({ type: 'addStop', placeId: null, dayId: day.id, kind: 'rest', durationMinutes: 30 })}>
           ☕ 休憩を追加
         </button>
+        {canOptimize && (
+          <button className="btn" onClick={() => dispatch({ type: 'setDayOrder', dayId: day.id, stopIds: optimized })} title="ロック・時刻指定・休憩は動かしません">
+            🧭 回る順番を最適化
+          </button>
+        )}
       </div>
       <PlaceSearch near={props.near} onPick={(h) => props.onAddSearchHit(h, day.id)} />
     </div>

@@ -56,6 +56,27 @@ export default function MapView({ pins, routes, selectedKey, focus, fitKey, onSe
   onSelectRef.current = onSelect;
   const onViewportRef = useRef(onViewport);
   onViewportRef.current = onViewport;
+  const pinsRef = useRef(pins);
+  pinsRef.current = pins;
+  const loaded = useRef(false);
+
+  // Fit the camera to the visible pins. Before the first 'load' the camera can still be
+  // reset by the style/projection, so the fit is repeated once the map has loaded.
+  const fitToPins = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    const pts = pinsRef.current.filter((p) => !p.dimmed);
+    if (pts.length === 0) return;
+    if (pts.length === 1) {
+      map.jumpTo({ center: [pts[0].lng, pts[0].lat], zoom: Math.max(map.getZoom(), 13) });
+      return;
+    }
+    const b = new LngLatBounds();
+    pts.forEach((p) => b.extend([p.lng, p.lat]));
+    map.fitBounds(b, { padding: 60, maxZoom: 15, duration: loaded.current ? 800 : 0 });
+  };
+  const fitRef = useRef(fitToPins);
+  fitRef.current = fitToPins;
 
   // create once
   useEffect(() => {
@@ -110,6 +131,10 @@ export default function MapView({ pins, routes, selectedKey, focus, fitKey, onSe
         });
       }
       setReady(true);
+    });
+    map.once('load', () => {
+      loaded.current = true;
+      fitRef.current();
     });
     map.on('error', (e) => {
       // Tile hiccups are common; only surface a full failure before the style loads.
@@ -218,18 +243,7 @@ export default function MapView({ pins, routes, selectedKey, focus, fitKey, onSe
 
   // fit to all pins when the set of places changes meaningfully (e.g. day switch)
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !fitKey) return;
-    const pts = pins.filter((p) => !p.dimmed);
-    if (pts.length === 0) return;
-    if (pts.length === 1) {
-      map.flyTo({ center: [pts[0].lng, pts[0].lat], zoom: Math.max(map.getZoom(), 13) });
-      return;
-    }
-    const b = new LngLatBounds();
-    pts.forEach((p) => b.extend([p.lng, p.lat]));
-    map.fitBounds(b, { padding: 70, maxZoom: 15, duration: 800 });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (fitKey && loaded.current) fitRef.current();
   }, [fitKey]);
 
   return (

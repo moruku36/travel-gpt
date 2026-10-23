@@ -145,3 +145,24 @@ describe('applyProposal', () => {
     expect(trip.days[0].stopIds).toContain(locked);
   });
 });
+
+describe('optimizeOrder', () => {
+  it('reorders to a shorter path while keeping the first and locked stops in place', async () => {
+    const { optimizeOrder } = await import('@/lib/trip');
+    const { place } = await import('./fixtures');
+    let t = kyotoTrip();
+    // add Arashiyama (far west) between two eastern temples → a zig-zag
+    t = reduceTrip(t, { type: 'addPlace', place: place('arashiyama', '嵐山', 135.6717, 35.017) });
+    t = reduceTrip(t, { type: 'addStop', placeId: 'arashiyama', dayId: t.days[0].id, position: 2 });
+    const day = t.days[0];
+    const order = optimizeOrder(t, day);
+    expect(order[0]).toBe(day.stopIds[0]);
+    expect(t.stops[order[order.length - 1]].placeId).toBe('arashiyama');
+
+    const locked = day.stopIds[2];
+    t = reduceTrip(t, { type: 'updateStop', stopId: locked, patch: { locked: true } });
+    expect(optimizeOrder(t, t.days[0])[2]).toBe(locked);
+    const applied = reduceTrip(t, { type: 'setDayOrder', dayId: day.id, stopIds: ['bogus'] });
+    expect(applied.days[0].stopIds).toEqual(t.days[0].stopIds);
+  });
+});
