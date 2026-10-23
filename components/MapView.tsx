@@ -59,6 +59,7 @@ export default function MapView({ pins, routes, selectedKey, focus, fitKey, onSe
   const pinsRef = useRef(pins);
   pinsRef.current = pins;
   const loaded = useRef(false);
+  const lastPinClick = useRef(0);
 
   // Fit the camera to the visible pins. Before the first 'load' the camera can still be
   // reset by the style/projection, so the fit is repeated once the map has loaded.
@@ -82,12 +83,16 @@ export default function MapView({ pins, routes, selectedKey, focus, fitKey, onSe
   useEffect(() => {
     if (!container.current) return;
     let map: MLMap;
+    // Start framed on the saved pins (if any) instead of the whole globe.
+    const initial = pinsRef.current.filter((p) => !p.dimmed);
+    const initialBounds = initial.length >= 2 ? initial.reduce((b, p) => b.extend([p.lng, p.lat]), new LngLatBounds()) : undefined;
     try {
       map = new MLMap({
         container: container.current,
         style: MAP_STYLE,
-        center: [139.7, 35.7],
-        zoom: 1.6,
+        center: initial.length === 1 ? [initial[0].lng, initial[0].lat] : [139.7, 35.7],
+        zoom: initial.length === 1 ? 13 : 1.6,
+        ...(initialBounds ? { bounds: initialBounds, fitBoundsOptions: { padding: 60, maxZoom: 15 } } : {}),
         attributionControl: { compact: true },
       });
     } catch {
@@ -140,9 +145,11 @@ export default function MapView({ pins, routes, selectedKey, focus, fitKey, onSe
       // Tile hiccups are common; only surface a full failure before the style loads.
       if (!map.isStyleLoaded()) setFailed(`地図タイルを読み込めません: ${String((e as unknown as { error?: Error }).error?.message ?? '')}`.trim());
     });
+    // Background click clears the selection — but not the click that just selected a pin.
     map.on('click', (e) => {
       const target = e.originalEvent.target as HTMLElement | null;
-      if (!target?.closest('.pin')) onSelectRef.current(null);
+      if (Date.now() - lastPinClick.current < 400 || target?.closest('.pin')) return;
+      onSelectRef.current(null);
     });
     map.on('moveend', () => {
       const c = map.getCenter();
@@ -187,11 +194,18 @@ export default function MapView({ pins, routes, selectedKey, focus, fitKey, onSe
         b.textContent = p.badge;
         el.appendChild(b);
       }
+      const select = () => {
+        lastPinClick.current = Date.now();
+        onSelectRef.current(p.key);
+      };
+      // keyboard (Enter/Space on the button) and programmatic clicks
       el.addEventListener('click', (ev) => {
         ev.stopPropagation();
-        onSelectRef.current(p.key);
+        select();
       });
       const marker = new Marker({ element: el, anchor: p.variant === 'destination' ? 'center' : 'bottom' }).setLngLat([p.lng, p.lat]).addTo(map);
+      // pointer clicks: MapLibre v6 reports them as a marker event
+      marker.on('click', select);
       markers.current.set(p.key, { marker, el, sig });
     }
     for (const [key, m] of markers.current) {
