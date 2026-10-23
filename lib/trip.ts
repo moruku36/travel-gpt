@@ -103,41 +103,99 @@ export interface ScheduledStop {
   travelToNext: number; // minutes
   travelEstimated: boolean;
   late: boolean; // fixed startTime cannot be reached
+  /** Part of a split ("別行動") run: only some travellers take part. */
+  branch?: boolean;
+  /** First shared stop after a split run: everyone meets here. */
+  rejoin?: boolean;
+}
+
+/** True when every traveller takes part in the stop (no participant subset). */
+export function isEveryone(trip: Trip, stop: Stop): boolean {
+  const ids = stop.participantIds;
+  return !ids || ids.length === 0 || trip.participants.every((p) => ids.includes(p.id));
 }
 
 /**
  * Compute start/end for each stop. legMinutes[i] is the travel time from stop i to i+1
  * (from the router) — when missing, a straight-line estimate is used.
+ * A run of consecutive split stops is scheduled per traveller in parallel; the next shared
+ * stop starts when the last traveller can arrive there.
  */
 export function schedule(trip: Trip, day: Day, legMinutes?: (number | null)[]): ScheduledStop[] {
   let t = toMinutes(day.startTime || '09:00');
   const out: ScheduledStop[] = [];
-  day.stopIds.forEach((id, i) => {
+  const ids = day.stopIds;
+  let rejoinNext = false;
+  let i = 0;
+  while (i < ids.length) {
+    const id = ids[i];
     const stop = trip.stops[id];
-    if (!stop) return;
-    let late = false;
-    if (stop.startTime) {
-      const fixed = toMinutes(stop.startTime);
-      if (fixed >= t) t = fixed;
-      else late = i > 0;
-      if (i === 0) t = fixed;
+    if (!stop) {
+      i++;
+      continue;
     }
-    const start = t;
-    const end = start + stop.durationMinutes;
-    const nextId = day.stopIds[i + 1];
-    let travel = 0;
-    let estimated = false;
-    if (nextId) {
-      const routed = legMinutes?.[i];
-      if (routed !== undefined && routed !== null) travel = routed;
-      else {
-        travel = estimateTravel(trip, id, nextId, day.mode);
-        estimated = true;
+
+    if (isEveryone(trip, stop)) {
+      let late = false;
+      if (stop.startTime) {
+        const fixed = toMinutes(stop.startTime);
+        if (fixed >= t) t = fixed;
+        else late = i > 0;
+        if (i === 0) t = fixed;
       }
+      const start = t;
+      const end = start + stop.durationMinutes;
+      const nextId = ids[i + 1];
+      const nextStop = nextId ? trip.stops[nextId] : undefined;
+      let travel = 0;
+      let estimated = false;
+      // travel into a split run is accounted per traveller inside the run
+      if (nextId && nextStop && isEveryone(trip, nextStop)) {
+        const routed = legMinutes?.[i];
+        if (routed !== undefined && routed !== null) travel = routed;
+        else {
+          travel = estimateTravel(trip, id, nextId, day.mode);
+          estimated = true;
+        }
+      }
+      out.push({ stopId: id, start, end, travelToNext: travel, travelEstimated: estimated, late, ...(rejoinNext ? { rejoin: true } : {}) });
+      rejoinNext = false;
+      t = end + travel;
+      i++;
+      continue;
     }
-    out.push({ stopId: id, start, end, travelToNext: travel, travelEstimated: estimated, late });
-    t = end + travel;
-  });
+
+    // split run: [i, j)
+    let j = i;
+    while (j < ids.length && trip.stops[ids[j]] && !isEveryone(trip, trip.stops[ids[j]])) j++;
+    const from = i > 0 ? ids[i - 1] : null;
+    const track = new Map(trip.participants.map((p) => [p.id, { t, last: from as ID | null }]));
+    for (let k = i; k < j; k++) {
+      const sid = ids[k];
+      const s = trip.stops[sid];
+      const members = trip.participants.filter((p) => s.participantIds!.includes(p.id));
+      let start = t;
+      for (const m of members) {
+        const tr = track.get(m.id)!;
+        start = Math.max(start, tr.t + (tr.last ? estimateTravel(trip, tr.last, sid, day.mode) : 0));
+      }
+      let late = false;
+      if (s.startTime) {
+        const fixed = toMinutes(s.startTime);
+        if (fixed >= start) start = fixed;
+        else late = true;
+      }
+      const end = start + s.durationMinutes;
+      for (const m of members) track.set(m.id, { t: end, last: sid });
+      out.push({ stopId: sid, start, end, travelToNext: 0, travelEstimated: true, late, branch: true });
+    }
+    const meet = j < ids.length ? ids[j] : null;
+    t = Math.max(
+      ...[...track.values()].map((tr) => tr.t + (meet && tr.last ? estimateTravel(trip, tr.last, meet, day.mode) : 0)),
+    );
+    rejoinNext = meet !== null;
+    i = j;
+  }
   return out;
 }
 

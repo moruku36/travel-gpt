@@ -57,6 +57,7 @@ export function checkTrip(
     const sched = schedule(trip, d, routes[d.id]?.minutes);
     if (st.end !== null && st.end > 22 * 60) issues.push({ severity: 'warn', dayId: d.id, text: `${dayName}は22時を過ぎます` });
     if (sched.some((s) => s.late)) issues.push({ severity: 'warn', dayId: d.id, text: `${dayName}に時刻指定へ間に合わない予定があります` });
+    if (sched.length && sched[sched.length - 1].branch) issues.push({ severity: 'warn', dayId: d.id, text: `${dayName}は別行動のまま終わります。合流する場所（全員の予定）を最後に入れましょう` });
 
     for (const p of prefs) {
       const num = Number(p.value);

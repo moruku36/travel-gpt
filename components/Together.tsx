@@ -7,7 +7,7 @@ import type { DayRoute } from '@/lib/client/useRoutes';
 import SharePanel, { type SyncControls } from './SharePanel';
 import WeatherStrip from './WeatherStrip';
 
-const PREF_KINDS: Record<PreferenceKind, { label: string; unit?: string; numeric?: boolean }> = {
+export const PREF_KINDS: Record<PreferenceKind, { label: string; unit?: string; numeric?: boolean }> = {
   'max-walk-km': { label: '1日の徒歩上限', unit: 'km', numeric: true },
   'rest-every-min': { label: '休憩の間隔', unit: '分ごと', numeric: true },
   'budget-per-day': { label: '1日の予算（1人）', numeric: true },

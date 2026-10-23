@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Trip } from '@/lib/types';
 import { api } from './api';
-import { placeOf } from '@/lib/trip';
+import { isEveryone, placeOf } from '@/lib/trip';
 
 export interface DayRoute {
   /** travel minutes from stop i to i+1, aligned with day.stopIds (null = rest/no location) */
@@ -19,7 +19,7 @@ export function useRoutes(trip: Trip): Record<string, DayRoute> {
   const keys = useMemo(
     () =>
       trip.days.map((d) => {
-        const pts = d.stopIds.map((id) => placeOf(trip, id)).map((p) => (p ? `${p.lng.toFixed(5)},${p.lat.toFixed(5)}` : '-'));
+        const pts = d.stopIds.map((id) => (onMainRoute(trip, id) ? placeOf(trip, id) : undefined)).map((p) => (p ? `${p.lng.toFixed(5)},${p.lat.toFixed(5)}` : '-'));
         return { dayId: d.id, key: `${d.mode}|${pts.join(';')}` };
       }),
     [trip],
@@ -39,7 +39,8 @@ export function useRoutes(trip: Trip): Record<string, DayRoute> {
             return;
           }
           // Only stops with a place take part; rest blocks keep their slot with 0 travel.
-          const located = day.stopIds.map((id, i) => ({ i, p: placeOf(trip, id) })).filter((x) => x.p);
+          // Split ("別行動") stops are not on the shared route; it goes straight to the meeting stop.
+          const located = day.stopIds.map((id, i) => ({ i, p: onMainRoute(trip, id) ? placeOf(trip, id) : undefined })).filter((x) => x.p);
           const minutes: (number | null)[] = day.stopIds.map(() => null);
           const distances: (number | null)[] = day.stopIds.map(() => null);
           if (located.length < 2) {
@@ -88,4 +89,9 @@ function shiftForRests(len: number, locatedIdx: number[], minutes: (number | nul
     out[to - 1] = minutes[from];
   }
   return out;
+}
+
+function onMainRoute(trip: Trip, stopId: string): boolean {
+  const s = trip.stops[stopId];
+  return !!s && isEveryone(trip, s);
 }

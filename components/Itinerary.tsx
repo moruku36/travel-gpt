@@ -88,6 +88,9 @@ function Overview({ trip, routes, onActiveDay }: Props) {
           </button>
         );
       })}
+      <a className="btn small" href={`/print?trip=${encodeURIComponent(trip.id)}`} target="_blank" rel="noopener">
+        🖨 旅のしおりを印刷 / PDF
+      </a>
       {totalCost > 0 && (
         <p className="muted small">
           入力済みの費用合計: {money(totalCost, trip.currency)}
@@ -172,6 +175,8 @@ function DayEditor(props: Props & { day: Day }) {
                   order={i + 1}
                   timeLabel={s ? `${fromMinutes(s.start)}–${fromMinutes(s.end)}` : ''}
                   late={s?.late ?? false}
+                  branch={s?.branch ?? false}
+                  rejoin={s?.rejoin ?? false}
                   travel={
                     s && s.travelToNext > 0
                       ? `${MODE_LABEL[day.mode]} ${durationLabel(s.travelToNext)}${dist ? ` ・ ${distanceLabel(dist)}` : ''}${s.travelEstimated || route?.estimated ? '（概算）' : ''}`
@@ -199,7 +204,7 @@ function DayEditor(props: Props & { day: Day }) {
   );
 }
 
-function StopRow(props: Props & { day: Day; stopId: ID; order: number; timeLabel: string; late: boolean; travel: string | null }) {
+function StopRow(props: Props & { day: Day; stopId: ID; order: number; timeLabel: string; late: boolean; branch: boolean; rejoin: boolean; travel: string | null }) {
   const { trip, day, stopId, dispatch } = props;
   const stop = trip.stops[stopId];
   const place = stop?.placeId ? trip.places[stop.placeId] : undefined;
@@ -209,13 +214,21 @@ function StopRow(props: Props & { day: Day; stopId: ID; order: number; timeLabel
   const selected = place && place.id === props.selectedPlaceId;
   const votes = place ? votesText(trip, place.id) : undefined;
   const dayIndex = trip.days.findIndex((d) => d.id === day.id);
+  const members = stop.participantIds?.length ? trip.participants.filter((p) => stop.participantIds!.includes(p.id)) : trip.participants;
+  const toggleMember = (pid: ID) => {
+    const current = stop.participantIds?.length ? stop.participantIds : trip.participants.map((p) => p.id);
+    const next = current.includes(pid) ? current.filter((x) => x !== pid) : [...current, pid];
+    if (next.length === 0) return; // someone has to go
+    dispatch({ type: 'updateStop', stopId, patch: { participantIds: next.length === trip.participants.length ? undefined : next } });
+  };
 
   return (
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition, ['--day' as string]: DAY_COLORS[dayIndex % DAY_COLORS.length] }}
-      className={`stop ${isDragging ? 'dragging' : ''} ${selected ? 'selected' : ''} kind-${stop.kind}`}
+      className={`stop ${isDragging ? 'dragging' : ''} ${selected ? 'selected' : ''} kind-${stop.kind} ${props.branch ? 'branch' : ''}`}
     >
+      {props.rejoin && <div className="rejoin">🤝 ここで全員合流</div>}
       <div className="stop-main">
         <button className="handle" {...attributes} {...listeners} aria-label="ドラッグして並べ替え" disabled={stop.locked}>
           {stop.locked ? '🔒' : '⋮⋮'}
@@ -230,6 +243,15 @@ function StopRow(props: Props & { day: Day; stopId: ID; order: number; timeLabel
             </span>
           )}
           {votes && <span className="votes">{votes}</span>}
+          {props.branch && (
+            <span className="members-chip" title="別行動">
+              👥 {members.map((m) => (
+                <span key={m.id} style={{ color: m.color }}>
+                  {m.name}
+                </span>
+              ))}
+            </span>
+          )}
         </button>
         <button className="icon" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="詳細を編集">
           ✎
@@ -299,6 +321,20 @@ function StopRow(props: Props & { day: Day; stopId: ID; order: number; timeLabel
               ))}
             </select>
           </label>
+          <div className="wide">
+            <span>行く人（外すと別行動）</span>
+            <div className="chips compact">
+              {trip.participants.map((p) => {
+                const on = members.some((m) => m.id === p.id);
+                return (
+                  <button key={p.id} type="button" className={`chip ${on ? 'on' : ''}`} aria-pressed={on} onClick={() => toggleMember(p.id)}>
+                    {on ? '✓ ' : ''}
+                    {p.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           <label className="wide">
             メモ
             <input className="input" value={stop.note ?? ''} maxLength={500} onChange={(e) => dispatch({ type: 'updateStop', stopId, patch: { note: e.target.value || undefined } })} />

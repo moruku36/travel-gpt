@@ -119,6 +119,9 @@ export default function TripSettings({ trip, trips, dispatch, onClose, onNewTrip
           <button className="btn" onClick={onNewTrip}>
             ＋ 新しい旅
           </button>
+          <a className="btn" href={`/print?trip=${encodeURIComponent(trip.id)}`} target="_blank" rel="noopener">
+            🖨 しおりを印刷
+          </a>
           <button className="btn" onClick={onExport}>
             JSON で書き出す
           </button>

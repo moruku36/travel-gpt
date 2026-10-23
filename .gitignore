@@ -48,3 +48,5 @@ next-env.d.ts
 .claude/launch.json
 /.preview/
 /public/maplibre-gl-worker.mjs
+/playwright-report/
+/test-results/

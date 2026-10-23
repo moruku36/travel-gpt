@@ -62,6 +62,7 @@ export function buildTripSummary(trip: Trip): TripSummary {
               lat: place?.lat,
               votes: place ? votesText(trip, place.id)?.slice(0, 200) : undefined,
               notes: notes ? notes.slice(0, 400) : undefined,
+              who: s.participantIds?.length && s.participantIds.length < trip.participants.length ? s.participantIds.map((id) => names.get(id) ?? '?').join('+').slice(0, 200) : undefined,
             },
           ];
         }),
