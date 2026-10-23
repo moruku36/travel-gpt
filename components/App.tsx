@@ -84,11 +84,23 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // persist (debounced)
+  // persist (debounced), and flush right away when the page is hidden or left
+  const tripRef = useRef(trip);
+  tripRef.current = trip;
   useEffect(() => {
     const t = setTimeout(() => store.saveTrip(trip), 300);
     return () => clearTimeout(t);
   }, [trip]);
+  useEffect(() => {
+    const flush = () => store.saveTrip(tripRef.current);
+    const onVisibility = () => document.visibilityState === 'hidden' && flush();
+    window.addEventListener('pagehide', flush);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      window.removeEventListener('pagehide', flush);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, []);
   useEffect(() => store.saveChat(trip.id, messages), [trip.id, messages]);
   useEffect(() => store.saveMe(trip.id, meId), [trip.id, meId]);
 
