@@ -1,7 +1,20 @@
 # CoVoyager Travel Chat — Phase 1〜3 ロードマップ
 
-更新: 2026-10-14。すべて未実装の計画。日程と予算は未確定。
-基盤・API・プライバシーの詳細は[全体設計](DESIGN.md)。今回の名称変更は各 Phase の完成を意味しない。
+更新: 2026-10-24。基盤・API・プライバシーの詳細は[全体設計](DESIGN.md)、類似サービス調査と provider 選定は[調査メモ](RESEARCH.md)。
+
+## 実装状況（2026-10-24）
+
+| Phase | 状態 | 実装したもの | 残り |
+| --- | --- | --- | --- |
+| P1 準備 gate | ✅ | 公開 LLM キー参照の撤去（server only）、旧 completion endpoint 廃止、依存整理、Pages API handler 化、CI。地点 provider は保存可能な OSM（Photon/Nominatim）に決定 | 本番タイルの SLA（OpenFreeMap は無保証） |
+| P1 旅程モデル | ✅ | Trip/Day/Place/Stop、schemaVersion/revision、追加・削除・並べ替え・時刻・滞在・休憩・ロック・取消/やり直し | 宿泊（stay）専用 UI |
+| P1 地図連動 | ✅ | MapLibre globe、ピン↔カード選択、候補/確定/提案の見分け、日ごとの経路（OSRM）、未計算・概算の明示、地図障害時のテキスト継続 | — |
+| P1 chat 提案 | ✅ | `/api/chat`（Responses API + Structured Outputs）、zod 検証、OSM 位置照合、差分表示と「適用」、手動変更保全、デモ応答 | 応答ストリーミング（費用対効果で見送り） |
+| P1 保存と検証 | ✅ | 端末保存、JSON export/import、全削除、回数/日次上限、アクセスコード、国内（京都）・海外（パリ, EUR, DST）fixture のテスト | ブラウザ E2E（Playwright）未導入 |
+| P2 同行者と合意 | ✅（端末内・リンク共有） | メンバー、行きたい/どちらでも/パス、場所メモ、必須/希望・共有/非公開条件、決定的チェック、行きたい度ボード、ライブ共有（room + token、CAS、マージ）、天気 | アカウント認証・権限ロール（owner/editor/viewer）、投票の version 管理 |
+| P3 個別配慮と再計画 | 🟡 一部 | 非公開条件の本人同意つき AI 反映（名前なし・撤回可）、現地再計画モード（ロック保持、任意の現在地 1 回取得） | 同意履歴の監査、private store の暗号化、閉鎖情報の自動取得 |
+
+以下は当初の計画です。
 
 ## Phase 1 — 地図＋チャット＋編集可能な旅程 MVP
 

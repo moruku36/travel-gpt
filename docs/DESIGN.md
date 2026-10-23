@@ -1,7 +1,8 @@
 # CoVoyager Travel Chat — 全体設計
 
-更新: 2026-10-14。状態: 設計案。基準 commit: `80556a15d6ee1e2ea8f329180756a9592e7723d9`。
-API、DB、制御、数値目標は未実装。[ロードマップ](ROADMAP.md)と合わせて読む。
+更新: 2026-10-14（設計案）、2026-10-24（実装反映）。[ロードマップ](ROADMAP.md)に実装状況の表がある。
+
+> **2026-10-24 の実装での変更点**: 地図・検索・経路は Mapbox ではなく MapLibre GL JS + OpenFreeMap + OSM（Photon/Nominatim, FOSSGIS OSRM）にした（[調査メモ](RESEARCH.md)）。これにより §4 の「保存許諾」gate は OSM の ODbL（帰属表示つきで保存可）で満たす。API は `/api/chat`・`/api/geocode`（§6 の places/search 相当）・`/api/route`・`/api/weather`・`/api/sync/[room]`・`/api/health`。共有は認証の代わりに推測困難な room id + token（URL フラグメントのみで受け渡し、server は token の SHA-256 だけ保存）で行い、§6 の membership/agreements API は未実装。以下は当初の設計案で、Mapbox 前提の記述は履歴として残す。
 
 ## 1. 目的と現状
 

@@ -57,3 +57,11 @@ main への反映は履歴を保持した追加 commit で行い、force push・
 - 今回、Mapbox トークンの失効/変更、依存更新、API 実装、課金、認証変更、履歴書換えはしない。
 - 値を表示しない照合で、ステージ済みツリー全体に旧 OpenAI 値がないこと、61対象ファイルの追跡解除、現行 `.next` の不在、ローカル旧 LLM 値が空、Mapbox 設定の不変を確認した。空サンプル、ignore、秘密を含まない追加内容、空白検査も PASS。公開 main の tree/blob 読戻しと commit は完了報告で示す。
 - 過去履歴と非公開の復元用コピーには値が残る。除去前 commit を単純 revert すると再露出するため、環境/生成物を復活させずに必要な変更だけ戻す。失効済みという本人申告と、今回の現行ツリー除去という検証結果は別の事実として記録する。
+
+## 2026-10-24: Phase 1〜2 の実装と P3 の一部
+
+- 旧試作（`pages/index.jsx`、`components/Chat.tsx`、空の `TravelForm`、未接続の `generatePlan.ts`、`public/styles.css`）を置き換え。ブラウザから OpenAI を直接呼ぶ経路と `NEXT_PUBLIC_OPENAI_API_KEY` 参照を削除し、キーは server の `OPENAI_API_KEY` だけで扱う。
+- 依存: `mapbox-gl` `axios` `dotenv` を削除、`maplibre-gl` `zod` `@dnd-kit/*` `vitest` を追加。dependabot を npm / github-actions で有効化。
+- 地図 provider を Mapbox から MapLibre + OpenFreeMap + OSM 系 API に変更（Mapbox トークン不要）。Globus は Web 非対応のため不採用（[調査メモ](RESEARCH.md)）。
+- テストは架空 fixture のみ。外部 API は CI で呼ばない（geocode / LLM はテストで差し替え）。
+- 開発環境の制約: 作業端末から npm registry へ TLS 接続できなかったため、依存解決・型チェック・ビルドは GitHub Actions 上で実施し、lockfile は CI の成果物から取り込んだ。
