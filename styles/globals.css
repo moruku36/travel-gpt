@@ -701,9 +701,9 @@ textarea.input {
   .place-card {
     left: 8px;
     right: 8px;
-    bottom: 36px;
+    bottom: 8px;
     width: auto;
-    max-height: calc(100% - 50px);
+    max-height: calc(100% - 56px);
   }
 }
 

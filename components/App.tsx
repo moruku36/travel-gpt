@@ -92,6 +92,11 @@ export default function App() {
   useEffect(() => store.saveChat(trip.id, messages), [trip.id, messages]);
   useEffect(() => store.saveMe(trip.id, meId), [trip.id, meId]);
 
+  // phones: a selected place needs room for its card
+  useEffect(() => {
+    if (selected && window.matchMedia('(max-width: 767px)').matches) setMapLarge(true);
+  }, [selected]);
+
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(null), 3500);
