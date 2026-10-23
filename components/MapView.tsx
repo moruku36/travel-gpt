@@ -110,7 +110,7 @@ export default function MapView({ pins, routes, selectedKey, focus, fitKey, onSe
     });
     map.on('error', (e) => {
       // Tile hiccups are common; only surface a full failure before the style loads.
-      if (!map.isStyleLoaded()) setFailed(`地図タイルを読み込めません: ${String((e as { error?: Error }).error?.message ?? '')}`.trim());
+      if (!map.isStyleLoaded()) setFailed(`地図タイルを読み込めません: ${String((e as unknown as { error?: Error }).error?.message ?? '')}`.trim());
     });
     map.on('click', (e) => {
       const target = e.originalEvent.target as HTMLElement | null;

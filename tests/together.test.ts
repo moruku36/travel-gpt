@@ -81,7 +81,7 @@ describe('sharing and sync', () => {
 
   it('signature ignores key order and revision', () => {
     const t = kyotoTrip();
-    const shuffled = Object.fromEntries(Object.entries({ ...t, revision: 99 }).reverse()) as typeof t;
+    const shuffled = Object.fromEntries(Object.entries({ ...t, revision: 99 }).reverse()) as unknown as typeof t;
     expect(tripSignature(shuffled)).toBe(tripSignature(t));
   });
 

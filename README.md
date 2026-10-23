@@ -2,32 +2,30 @@
 
 [English](README.md) | [日本語](README.ja.md)
 
-Map-linked conversational planning for editable domestic and international trips.
-Repository: [moruku36/covoyager-travel-chat](https://github.com/moruku36/covoyager-travel-chat).
+A travel planner for two (or a small group) where the chat and the map work as one. It covers both domestic and international trips. Ask the assistant something and the globe beside the chat flies to the suggestions. You mark places with each other ("crowded here", "let's skip this one"), then turn them into an itinerary you can edit.
 
-## Current status
+## Features
 
-This is an early Next.js Pages Router / React prototype with a Mapbox map and a chat panel. Map and chat state are not connected. Structured itinerary editing, persistence, collaboration, live travel data, and Azure integration are not implemented. The chat uses legacy OpenAI completion endpoints. This is not a completed Phase 1 MVP or a production-ready service.
+- **Chat × map**: assistant suggestions appear as purple pins (A, B, C…). Each place is checked against OpenStreetMap and labelled *verified* or *AI estimate*.
+- **Modes**: plan the itinerary, find a destination (worldwide candidates on the globe), and replan on the spot (rain, delays, closures; only that day changes, and locked stops stay).
+- **Itinerary editing**: day tabs, drag to reorder, fixed start times, durations, rests, costs, notes, moving stops between days, lock, and undo/redo.
+- **Routing**: walking, cycling and driving legs via OSRM. Transit is a labelled estimate.
+- **Together**: want / either way / skip reactions, shared place notes, an agreement board, and per-person conditions (walking limit, rest interval, daily budget, avoid crowds or heat…). Conditions are checked in code, never relaxed by the AI.
+- **Privacy**: each condition is either shared or private. Private conditions never appear on the partner's screen, in share links or in exports. They reach the AI only with the owner's consent, and without the owner's name.
+- **Sharing**: live sync between two devices through an invite link, or a snapshot link. JSON export/import, and wiping everything stored on the device.
+- **Weather**: Open-Meteo forecast for the trip days (from 16 days before).
+- **Responsive**: 3 columns on desktop, 2 on tablet, map plus tabs on phones.
 
-The 2026-10-14 change preserves code and Git history, changes the product/repository name, and adds design documents. It does not implement the roadmap, deploy a service, enable billing, or change authentication.
+See [docs/RESEARCH.md](docs/RESEARCH.md) for the competitor survey. It also explains why the map uses MapLibre instead of Globus: Globus is a native iOS/Android SDK with no web support.
 
-## Design and roadmap
-
-- [Overall design (Japanese)](docs/DESIGN.md): architecture, data model, API, freshness, costs, privacy, tests, migration, and open decisions.
-- [Phase 1–3 roadmap (Japanese)](docs/ROADMAP.md): scope, exclusions, acceptance criteria, and release gates.
-- [Rename and verification record (Japanese)](docs/CHANGE_RECORD.md): baseline, affected references, and remaining work.
-
-Phase 1 connects map, chat, and an editable itinerary. Phase 2 supports each companion's required/preferred conditions, rest, separate activities/rooms, budgets, and explicit agreement on conflicts. Phase 3 adds consent-based optional personal accommodations and replanning during travel. Optional health-related information is minimized, private by default, and never automatically shared with companions. The service does not diagnose or guarantee safety. Public examples are fictional.
-
-## Local development
+## Getting started
 
 ```sh
-git clone https://github.com/moruku36/covoyager-travel-chat.git
-cd covoyager-travel-chat
-npm ci
+npm install
+cp .env.example .env.local   # set OPENAI_API_KEY (empty = demo responder)
 npm run dev
 ```
 
-These are existing development commands, not proof that the legacy chat works. Review [security migration](docs/DESIGN.md#8-セキュリティとプライバシー) before using credentials or personal data: the browser code still references `NEXT_PUBLIC_OPENAI_API_KEY`. The owner reported the old OpenAI key revoked; `.env.local` and `.next` artifacts have been removed from the current Git tree, while prior Git history remains. Copy the empty [.env.example](.env.example) locally and keep the legacy public LLM variable empty until server-side migration. Do not set a new LLM secret in a public environment variable. Only a scoped, URL-restricted public Mapbox token belongs in the browser. No external API call is needed to review the design.
+Maps, search, routing and weather need no keys. Without `OPENAI_API_KEY` the app answers with fixed demo data at no cost. Configuration options are listed in [.env.example](.env.example) and the Japanese README. Set `APP_ACCESS_CODE` on any public deployment so strangers cannot spend your API credit.
 
-`npm run build` is the existing build command. `npm test` currently exits with “no test specified”; a test suite is planned. Dependency updates, artifact cleanup, credential remediation, and provider selection require separate implementation work.
+`npm run typecheck`, `npm test` (Vitest, fictional fixtures, no network) and `npm run build` run in CI on every push.

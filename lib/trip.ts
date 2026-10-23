@@ -72,7 +72,7 @@ export function dateRange(start?: string, end?: string, max = 31): string[] {
 export function syncDays(trip: Trip): Trip {
   const dates = dateRange(trip.startDate, trip.endDate);
   if (dates.length === 0) return trip;
-  const days = trip.days.slice(0, dates.length).map((d, i) => ({ ...d, date: dates[i] }));
+  const days: Day[] = trip.days.slice(0, dates.length).map((d, i) => ({ ...d, date: dates[i] }));
   while (days.length < dates.length) days.push(newDay(dates[days.length], trip.days[0]?.mode));
   const overflow = trip.days.slice(dates.length).flatMap((d) => d.stopIds);
   if (overflow.length) {
