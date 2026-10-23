@@ -31,9 +31,10 @@ interface Props {
   onSave: (item: CardItem) => ID;
   onClose: () => void;
   onAsk: (text: string) => void;
+  onChooseDestination: (name: string, lng: number, lat: number) => void;
 }
 
-export default function PlaceCard({ item, trip, me, dispatch, onSave, onClose, onAsk }: Props) {
+export default function PlaceCard({ item, trip, me, dispatch, onSave, onClose, onAsk, onChooseDestination }: Props) {
   const [noteTag, setNoteTag] = useState<NoteTag>('memo');
   const [noteText, setNoteText] = useState('');
   const p = item.place;
@@ -44,6 +45,7 @@ export default function PlaceCard({ item, trip, me, dispatch, onSave, onClose, o
   const cost = item.kind === 'suggestion' && item.place.cost !== null ? money(item.place.cost, item.place.currency ?? trip.currency) : null;
 
   const ensureId = () => placeId ?? onSave(item);
+  const isDestination = p.category === 'destination';
 
   return (
     <div className="place-card" role="dialog" aria-label={p.name}>
@@ -131,12 +133,17 @@ export default function PlaceCard({ item, trip, me, dispatch, onSave, onClose, o
       )}
 
       <div className="row wrap">
+        {isDestination && (
+          <button className="btn primary" onClick={() => onChooseDestination(p.name, p.lng, p.lat)}>
+            ✈ ここに決める
+          </button>
+        )}
         {item.kind === 'suggestion' && (
           <button className="btn" onClick={() => onSave(item)}>
             ☆ 候補に保存
           </button>
         )}
-        {trip.days.map((d, i) => (
+        {!isDestination && trip.days.map((d, i) => (
           <button key={d.id} className="btn small" onClick={() => dispatch({ type: 'addStop', placeId: ensureId(), dayId: d.id, durationMinutes: item.kind === 'suggestion' ? item.place.durationMinutes || undefined : undefined })}>
             ＋{dayLabel(i, d.date).split(' ')[0]}
           </button>

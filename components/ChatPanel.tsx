@@ -29,6 +29,11 @@ export default function ChatPanel(props: Props) {
   const [code, setCode] = useState('');
   const listRef = useRef<HTMLDivElement>(null);
 
+  // once a destination is chosen, switch from "find a destination" to planning
+  useEffect(() => {
+    if (trip.destination) setMode((m) => (m === 'recommend' ? 'plan' : m));
+  }, [trip.destination]);
+
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages.length, busy]);

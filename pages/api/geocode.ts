@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { q, lng, lat } = parsed.data;
   const near = lng !== undefined && lat !== undefined ? { lng, lat } : undefined;
-  const candidates = await geocode(q, { near, limit: 8 });
+  const candidates = await geocode(q, { near, limit: 8, prefer: 'nominatim' });
   res.setHeader('Cache-Control', 'private, max-age=300');
   res.status(200).json({ candidates, attribution: '© OpenStreetMap contributors' });
 }

@@ -382,7 +382,22 @@ export default function App() {
             onViewport={(v) => (viewport.current = v)}
           />
           {selectedItem && (
-            <PlaceCard item={selectedItem} trip={trip} me={me} dispatch={dispatch} onSave={saveSuggestion} onClose={() => setSelected(null)} onAsk={ask} />
+            <PlaceCard
+              item={selectedItem}
+              trip={trip}
+              me={me}
+              dispatch={dispatch}
+              onSave={saveSuggestion}
+              onClose={() => setSelected(null)}
+              onAsk={ask}
+              onChooseDestination={(name, lng, lat) => {
+                dispatch({ type: 'meta', patch: { destination: name, title: trip.title === '新しい旅' ? `${name}の旅` : trip.title } });
+                setSelected(null);
+                setFocus({ lng, lat, zoom: 11, seq: Date.now() });
+                setToast(`行き先を「${name}」にしました。日付を決めて「旅程を相談」で候補を出しましょう`);
+                if (!trip.startDate) setSettingsOpen(true);
+              }}
+            />
           )}
           <button className="map-toggle" onClick={() => setMapLarge((v) => !v)} aria-label={mapLarge ? '地図を小さく' : '地図を大きく'}>
             {mapLarge ? '⌄ パネル' : '⌃ 地図'}

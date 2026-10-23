@@ -54,79 +54,86 @@ function photonToCandidate(f: PhotonFeature): GeoCandidate {
   };
 }
 
-export async function geocode(
-  query: string,
-  opts: { near?: { lng: number; lat: number }; limit?: number; lang?: string } = {},
-): Promise<GeoCandidate[]> {
-  const q = query.trim().slice(0, 300);
-  if (q.length < 2) return [];
-  const limit = Math.min(opts.limit ?? 5, 10);
-  const near = opts.near ? `${opts.near.lng.toFixed(2)},${opts.near.lat.toFixed(2)}` : '';
-  const key = `${q}|${near}|${limit}`;
-  const cached = cacheGet(key);
-  if (cached) return cached;
-
-  let result: GeoCandidate[] = [];
+async function photon(q: string, limit: number, near?: { lng: number; lat: number }, lang?: string): Promise<GeoCandidate[]> {
   try {
     const url = new URL('https://photon.komoot.io/api/');
     url.searchParams.set('q', q);
     url.searchParams.set('limit', String(limit));
-    if (opts.near) {
-      url.searchParams.set('lat', String(opts.near.lat));
-      url.searchParams.set('lon', String(opts.near.lng));
+    if (near) {
+      url.searchParams.set('lat', String(near.lat));
+      url.searchParams.set('lon', String(near.lng));
     }
-    // Photon supports a few languages only; others fall back to local names.
-    if (opts.lang && ['en', 'de', 'fr'].includes(opts.lang)) url.searchParams.set('lang', opts.lang);
+    // Photon supports en/de/fr/default only; others fall back to local names.
+    if (lang && ['en', 'de', 'fr'].includes(lang)) url.searchParams.set('lang', lang);
     const res = await fetchWithTimeout(url.toString(), { headers: { 'User-Agent': geoUserAgent() }, timeoutMs: 5000 });
-    if (res.ok) {
-      const data = (await res.json()) as { features?: PhotonFeature[] };
-      result = (data.features ?? []).map(photonToCandidate).filter((c) => c.name);
-    }
+    if (!res.ok) return [];
+    const data = (await res.json()) as { features?: PhotonFeature[] };
+    return (data.features ?? []).map(photonToCandidate).filter((c) => c.name);
   } catch {
-    // fall through to Nominatim
+    return [];
   }
+}
 
-  if (result.length === 0) {
-    try {
-      const url = new URL('https://nominatim.openstreetmap.org/search');
-      url.searchParams.set('q', q);
-      url.searchParams.set('format', 'jsonv2');
-      url.searchParams.set('limit', String(limit));
-      url.searchParams.set('addressdetails', '1');
-      const res = await fetchWithTimeout(url.toString(), {
-        headers: { 'User-Agent': geoUserAgent(), 'Accept-Language': opts.lang ?? 'ja,en' },
-        timeoutMs: 6000,
-      });
-      if (res.ok) {
-        const rows = (await res.json()) as Array<{
-          name?: string;
-          display_name: string;
-          lat: string;
-          lon: string;
-          category?: string;
-          type?: string;
-          osm_type?: string;
-          osm_id?: number;
-          address?: { country_code?: string };
-        }>;
-        result = rows.map((r) => ({
-          name: r.name || r.display_name.split(',')[0],
-          lng: Number(r.lon),
-          lat: Number(r.lat),
-          address: r.display_name,
-          countryCode: (r.address?.country_code ?? '').toUpperCase(),
-          category: r.type ?? r.category ?? '',
-          sourceRef: `osm:${r.osm_type ?? ''}${r.osm_id ?? ''}`,
-        }));
-      }
-    } catch {
-      // both providers failed; caller treats as unverified
-    }
+async function nominatim(q: string, limit: number, lang?: string): Promise<GeoCandidate[]> {
+  try {
+    const url = new URL('https://nominatim.openstreetmap.org/search');
+    url.searchParams.set('q', q);
+    url.searchParams.set('format', 'jsonv2');
+    url.searchParams.set('limit', String(limit));
+    url.searchParams.set('addressdetails', '1');
+    const res = await fetchWithTimeout(url.toString(), {
+      headers: { 'User-Agent': geoUserAgent(), 'Accept-Language': lang ?? 'ja,en' },
+      timeoutMs: 6000,
+    });
+    if (!res.ok) return [];
+    const rows = (await res.json()) as Array<{
+      name?: string;
+      display_name: string;
+      lat: string;
+      lon: string;
+      category?: string;
+      type?: string;
+      osm_type?: string;
+      osm_id?: number;
+      address?: { country_code?: string };
+    }>;
+    return rows.map((r) => ({
+      name: r.name || r.display_name.split(',')[0],
+      lng: Number(r.lon),
+      lat: Number(r.lat),
+      address: r.display_name,
+      countryCode: (r.address?.country_code ?? '').toUpperCase(),
+      category: r.type ?? r.category ?? '',
+      sourceRef: `osm:${r.osm_type ?? ''}${r.osm_id ?? ''}`,
+    }));
+  } catch {
+    return [];
   }
+}
+
+/**
+ * Manual search prefers Nominatim (localised names, e.g. Japanese); assistant verification
+ * prefers Photon (no 1 req/s limit, so several places can be checked in parallel).
+ */
+export async function geocode(
+  query: string,
+  opts: { near?: { lng: number; lat: number }; limit?: number; lang?: string; prefer?: 'photon' | 'nominatim' } = {},
+): Promise<GeoCandidate[]> {
+  const q = query.trim().slice(0, 300);
+  if (q.length < 2) return [];
+  const limit = Math.min(opts.limit ?? 5, 10);
+  const prefer = opts.prefer ?? 'photon';
+  const near = opts.near ? `${opts.near.lng.toFixed(2)},${opts.near.lat.toFixed(2)}` : '';
+  const key = `${prefer}|${q}|${near}|${limit}`;
+  const cached = cacheGet(key);
+  if (cached) return cached;
+
+  let result = prefer === 'nominatim' ? await nominatim(q, limit, opts.lang) : await photon(q, limit, opts.near, opts.lang);
+  if (result.length === 0) result = prefer === 'nominatim' ? await photon(q, limit, opts.near, opts.lang) : await nominatim(q, limit, opts.lang);
 
   if (opts.near) {
-    const near = opts.near;
-    result.sort((a, b) => haversineKm(a, near) - haversineKm(b, near));
+    const n = opts.near;
+    result.sort((a, b) => haversineKm(a, n) - haversineKm(b, n));
   }
   cacheSet(key, result);
   return result;

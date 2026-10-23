@@ -54,7 +54,7 @@ export default function PlaceSearch({ near, onPick, placeholder }: Props) {
     <div className="search">
       <input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder={placeholder ?? '場所を検索して追加（例: 金閣寺）'} aria-label="場所を検索" />
       {state === 'loading' && <div className="search-note">検索中…</div>}
-      {state === 'empty' && <div className="search-note">見つかりませんでした</div>}
+      {state === 'empty' && <div className="search-note">見つかりませんでした。海外の場所は英語名（例: Louvre）でも試してください</div>}
       {state === 'error' && <div className="search-note">検索サービスに接続できません</div>}
       {hits.length > 0 && (
         <ul className="search-results" role="listbox">
