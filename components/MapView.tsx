@@ -2,10 +2,13 @@
 // route source, so chatting never re-creates the map. Markers are plain DOM elements whose
 // text is set with textContent (never innerHTML) so place names cannot inject markup.
 import { useEffect, useRef, useState } from 'react';
-import { GlobeControl, LngLatBounds, Map as MLMap, Marker, NavigationControl, GeolocateControl } from 'maplibre-gl';
+import { GlobeControl, LngLatBounds, Map as MLMap, Marker, NavigationControl, GeolocateControl, getVersion, setWorkerUrl } from 'maplibre-gl';
 import type { GeoJSONSource } from 'maplibre-gl';
 
 export const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
+
+// Copied to /public by scripts/copy-maplibre-worker.mjs (bundling breaks the default relative URL).
+setWorkerUrl(`/maplibre-gl-worker.mjs?v=${getVersion()}`);
 
 export interface MapPin {
   key: string;
