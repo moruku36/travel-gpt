@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'feat/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # Falls back to `npm install` when the lockfile is out of date, and uploads the
+      # resolved lockfile so it can be committed.
+      - name: Install
+        run: npm ci || npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build (no secrets)
+        run: npm run build
+        env:
+          NEXT_OUTPUT: standalone
+          NEXT_TELEMETRY_DISABLED: '1'
+      - name: Secret must not reach the browser bundle
+        run: |
+          if grep -rIl "api.openai.com" .next/static; then
+            echo "Server-only LLM reference found in client bundle"; exit 1
+          fi
+      - name: Dependency audit (high and above)
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true
+      - name: Package standalone build
+        run: |
+          cp -r public .next/standalone/ 2>/dev/null || true
+          mkdir -p .next/standalone/.next && cp -r .next/static .next/standalone/.next/
+          tar -czf standalone.tgz -C .next standalone
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lockfile
+          path: package-lock.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: standalone
+          path: standalone.tgz
+          retention-days: 3
