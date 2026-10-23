@@ -166,3 +166,25 @@ describe('optimizeOrder', () => {
     expect(applied.days[0].stopIds).toEqual(t.days[0].stopIds);
   });
 });
+
+describe('split plans (別行動)', () => {
+  it('schedules a split run in parallel and starts the next shared stop when both can arrive', () => {
+    let t = kyotoTrip();
+    const [a, b] = t.participants;
+    const [s1, s2, s3] = t.days[0].stopIds;
+    // after stop 1, A goes to Kiyomizu (60m) while B goes to Nanzenji for 150m; nobody is left for stop 3 → add a shared meeting stop
+    t = reduceTrip(t, { type: 'updateStop', stopId: s2, patch: { participantIds: [a.id] } });
+    t = reduceTrip(t, { type: 'updateStop', stopId: s3, patch: { participantIds: [b.id], durationMinutes: 150 } });
+    t = reduceTrip(t, { type: 'addStop', placeId: 'kiyomizu', dayId: t.days[0].id, durationMinutes: 30 });
+    const sched = schedule(t, t.days[0]);
+    const by = new Map(sched.map((x) => [x.stopId, x]));
+    expect(by.get(s2)!.branch).toBe(true);
+    expect(by.get(s3)!.branch).toBe(true);
+    // both branches start right after stop 1 (plus their own travel), not one after another
+    expect(by.get(s3)!.start).toBeLessThan(by.get(s2)!.end + 30);
+    const meet = sched[3];
+    expect(meet.rejoin).toBe(true);
+    expect(meet.start).toBeGreaterThanOrEqual(by.get(s3)!.end);
+    expect(by.get(s1)!.travelToNext).toBe(0);
+  });
+});

@@ -53,6 +53,7 @@ export const tripSummarySchema = z.object({
               lat: lat.optional(),
               votes: z.string().max(200).optional(),
               notes: z.string().max(400).optional(),
+              who: z.string().max(200).optional(),
             }),
           )
           .max(30),
